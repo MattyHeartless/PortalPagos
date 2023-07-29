@@ -79,12 +79,21 @@ body {
   font-family: "Open Sans", sans-serif;
   font-size: 16px;
 }
+.logout{
+    display:none;
+}
 
+@media only screen and (max-width: 480px) {
+    .logout {
+        display: block;
+    }
+
+}
 a {
-  text-decoration: none;
-  -webkit-transition: 0.5s;
-  transition: 0.5s;
-  color: #09101f;
+    text-decoration: none;
+    -webkit-transition: 0.5s;
+    transition: 0.5s;
+    color: #09101f;
 }
 
 a:hover, a:focus {
@@ -177,7 +186,7 @@ Default btn CSS
   overflow: hidden;
 }
 
-.default-btn::before {
+/*.default-btn::before {
   content: '';
   position: absolute;
   left: 0;
@@ -189,7 +198,7 @@ Default btn CSS
   -webkit-transition: 0.5s;
   transition: 0.5s;
   border-radius: 5px;
-}
+}*/
 
 .default-btn:hover {
   color: #ffffff;
@@ -925,9 +934,9 @@ Navbar Area CSS
   color: #09101f;
 }
 
-.navbar-color-two .main-navbar .navbar .navbar-nav .nav-item .dropdown-menu li a:hover, .navbar-color-two .main-navbar .navbar .navbar-nav .nav-item .dropdown-menu li a:focus, .navbar-color-two .main-navbar .navbar .navbar-nav .nav-item .dropdown-menu li a.active {
-  color: #4865ff;
-}
+    .navbar-color-two .main-navbar .navbar .navbar-nav .nav-item .dropdown-menu li a:hover, .navbar-color-two .main-navbar .navbar .navbar-nav .nav-item .dropdown-menu li a:focus, .navbar-color-two .main-navbar .navbar .navbar-nav .nav-item .dropdown-menu li a.active {
+        color: #af1d1d;
+    }
 
 .navbar-color-two .main-navbar .navbar .navbar-nav .nav-item .dropdown-menu li .dropdown-menu li a {
   color: #09101f;
@@ -1274,9 +1283,9 @@ Navbar Area CSS
   .main-responsive-nav .main-responsive-menu.mean-container .mean-nav ul {
     font-size: 15px;
   }
-  .main-responsive-nav .main-responsive-menu.mean-container .mean-nav ul li a.active {
-    color: #fb7756;
-  }
+    .main-responsive-nav .main-responsive-menu.mean-container .mean-nav ul li a.active {
+        color: #af1d1d;
+    }
   .main-responsive-nav .main-responsive-menu.mean-container .mean-nav ul li a i {
     display: none;
   }
@@ -1539,6 +1548,7 @@ Main Banner Area CSS
   height: 60px;
   -webkit-transition: 0.5s;
   transition: 0.5s;
+  border-radius:5px;
 }
 
 .main-banner-form .form-group .form-control:focus {
