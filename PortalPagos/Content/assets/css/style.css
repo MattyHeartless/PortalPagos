@@ -2251,9 +2251,9 @@ Services Area CSS
 Credit Card Area CSS
 =================================================*/
 .credit-card-area.bg-ffffff .row {
-  background-color: #f2132b;
-  padding: 80px 100px;
-  border-radius: 25px;
+    background-color: #AF1D1D;
+    padding: 40px 60px;
+    border-radius: 25px;
 }
 
 .credit-card-content span {
