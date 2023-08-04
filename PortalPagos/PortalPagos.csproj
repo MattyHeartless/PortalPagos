@@ -168,6 +168,7 @@
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\ClienteController.cs" />
+    <Compile Include="Controllers\Cliente\PagosController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\SessionController.cs" />
     <Compile Include="Global.asax.cs">
@@ -429,6 +430,10 @@
     <Content Include="Content\js\wow.min.js" />
     <Content Include="Content\LOGO-REDZ.gif" />
     <Content Include="Content\marks.svg" />
+    <Content Include="Content\payments.svg" />
+    <Content Include="Content\payments1.svg" />
+    <Content Include="Content\payments2.svg" />
+    <Content Include="Content\payments3.svg" />
     <Content Include="Content\services.svg" />
     <Content Include="Content\speedtest.svg" />
     <Content Include="favicon.ico" />
@@ -457,6 +462,7 @@
     <Content Include="Content\fonts\Flaticon.woff2" />
     <Content Include="Content\fonts\Flaticond41d.eot" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
+    <Content Include="Scripts\Cliente\Pagos.js" />
     <Content Include="Scripts\email-decode.min.js" />
     <Content Include="Scripts\Global.js" />
     <Content Include="Scripts\Inicio\Sesion.js" />
@@ -497,6 +503,7 @@
     <Content Include="Views\Account\Register.cshtml" />
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
     <Content Include="Views\Cliente\Dashboard.cshtml" />
+    <Content Include="Views\Cliente\Pagos.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Views\Session\" />

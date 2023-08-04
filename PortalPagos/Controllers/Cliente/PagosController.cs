@@ -13,56 +13,56 @@ using System.Net.Security;
 using System.Security.Cryptography.X509Certificates;
 using Newtonsoft.Json;
 
-namespace PortalPagos.Controllers
+namespace PortalPagos.Controllers.Cliente
 {
-    public class ClienteController : Controller
+    public class PagosController : Controller
     {
-        // GET: Cliente
-        public async Task<ActionResult> Dashboard()
+        // GET: Pagos
+
+        public async Task<ActionResult> getPagos()
         {
-            if (Session != null && Session["Session"] != null && Session["Session"].ToString() == "session_created")
+            using (var clients = new HttpClient())
             {
-                using (var clients = new HttpClient())
+                HttpClient client = new HttpClient();
+                List<Root> list = new List<Root>();
+                System.Net.ServicePointManager.SecurityProtocol = System.Net.SecurityProtocolType.Tls12;
+                ServicePointManager.ServerCertificateValidationCallback = new RemoteCertificateValidationCallback(ValidateServerCertificate);
+                client.BaseAddress = new Uri("https://189.199.227.94/crm/api/v1.0/");
+                client.DefaultRequestHeaders.Accept.Clear();
+                client.DefaultRequestHeaders.Add("X-Auth-App-Key", "Qygxrlhlu9VvqOssEjJXW+M7MoCQcasxMC6X7wf/JFDJke1VOidFhRxJQ7GU44Bq");
+                //                client.DefaultRequestHeaders.Authorization =
+                //new AuthenticationHeaderValue("X-Auth-App-Key", "Qygxrlhlu9VvqOssEjJXW+M7MoCQcasxMC6X7wf/JFDJke1VOidFhRxJQ7GU44Bq");
+                client.DefaultRequestHeaders.Accept.Add(
+                    new MediaTypeWithQualityHeaderValue("application/json"));
+                HttpResponseMessage response = await client.GetAsync("invoices?organizationId=2&clientId=4");
+                if (response.IsSuccessStatusCode)
                 {
-                    HttpClient client = new HttpClient();
-                    List<Root> d = new List<Root>();
-                    System.Net.ServicePointManager.SecurityProtocol = System.Net.SecurityProtocolType.Tls12;
-                    ServicePointManager.ServerCertificateValidationCallback = new RemoteCertificateValidationCallback(ValidateServerCertificate);
-                    client.BaseAddress = new Uri("https://189.199.227.94/crm/api/v1.0/");
-                    client.DefaultRequestHeaders.Accept.Clear();
-                    client.DefaultRequestHeaders.Add("X-Auth-App-Key", "Qygxrlhlu9VvqOssEjJXW+M7MoCQcasxMC6X7wf/JFDJke1VOidFhRxJQ7GU44Bq");
-                    //                client.DefaultRequestHeaders.Authorization =
-                    //new AuthenticationHeaderValue("X-Auth-App-Key", "Qygxrlhlu9VvqOssEjJXW+M7MoCQcasxMC6X7wf/JFDJke1VOidFhRxJQ7GU44Bq");
-                    client.DefaultRequestHeaders.Accept.Add(
-                        new MediaTypeWithQualityHeaderValue("application/json"));
-                    HttpResponseMessage response = await client.GetAsync("invoices?organizationId=2&clientId=4");
-                    if (response.IsSuccessStatusCode)
-                    {
-                        var s = await response.Content.ReadAsStringAsync();
-                        d = JsonConvert.DeserializeObject<List<Root>>(s);
-                    }
-
-
-
-
-
-
-
+                    var s = await response.Content.ReadAsStringAsync();
+                    list = JsonConvert.DeserializeObject<List<Root>>(s);
                 }
-                return View();
+
+                List<Invoices> linv = new List<Invoices>();
+                foreach (var item in list)
+                {
+                    Invoices inv = new Invoices();
+                    inv.id = item.id;
+                    inv.number = item.number;
+                    inv.amountToPay = item.amountToPay;
+                    inv.total = item.total;
+                    inv.status = item.status;
+                    inv.type = item.items[0].type;
+                    inv.label = item.items[0].label;
+                    linv.Add(inv);
+                }
+
+                return Json(linv);
             }
-            else
-                return RedirectToAction("Index", "Home");
+
         }
         public static bool ValidateServerCertificate(Object sender, X509Certificate certificate, X509Chain chain, SslPolicyErrors sslPolicyErrors)
         {
             return true;
         }
-        public async Task<JsonResult> test()
-        {
-            return Json("");
-        }
-
 
         // Root myDeserializedClass = JsonConvert.DeserializeObject<List<Root>>(myJsonResponse);
         public class Item
@@ -84,6 +84,17 @@ namespace PortalPagos.Controllers
             public double? discountPrice { get; set; }
             public double? discountQuantity { get; set; }
             public double? discountTotal { get; set; }
+        }
+
+        public class Invoices
+        {
+            public int id { get; set; }
+            public string number { get; set; }
+            public double amountToPay { get; set; }
+            public double total { get; set; }
+            public int status { get; set; }
+            public string type { get; set; }
+            public string label { get; set; }
         }
 
         public class PaymentCover
@@ -154,22 +165,5 @@ namespace PortalPagos.Controllers
             public object proformaInvoiceId { get; set; }
             public bool isAppliedVatReverseCharge { get; set; }
         }
-
-
-
-
-
-        public ActionResult Pagos()
-        {
-            if (Session != null && Session["Session"] != null && Session["Session"].ToString() == "session_created")
-            {
-                return View();
-            }
-            else
-                return RedirectToAction("Index", "Home");
-        }
-
-
-
     }
 }
