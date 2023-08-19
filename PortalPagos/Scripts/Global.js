@@ -20,7 +20,10 @@ function getPath() {
     var $Patch;
     if (origin == "http://localhost:61277") {
         $Patch = origin + "/";
-    } else {
+    }else if (origin == "http://192.168.100.38:61277") {
+        $Patch = origin + "/";
+    }
+    else {
         $Patch = origin + "/REDZ";
     }
     return $Patch;

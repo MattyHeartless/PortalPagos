@@ -26,7 +26,7 @@
                                 <th>Tipo</th>
                                 <th>Concepto</th>
                                 <th>Periodo</th>
-                                <th>Cantitad a pagar</th>
+                                <th>Cantidad a pagar</th>
                                 <th>Total</th>
                                 <th></th>
                             </tr>
@@ -39,5 +39,78 @@
     </div>
 </div>
 
+<div class="modal fade" id="pago-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="pagos-modaltitle">Pago mensual</h5>
+                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close" style="border:0;background-color:#fff;">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form action="/Pagos/CreatePaySession">
+                <div class="modal-body">
+
+                    <div class="row">
+                        @*<button class="btn btn-danger" id="btn_calizs">Get info</button>*@
+                        <div class="col-md-12">
+                            <h4 class="card-title" id="mat_addtitle">Detalle de pago</h4>
+                            <div class="table-responsive push">
+                                <table class="table table-bordered table-hover text-nowrap">
+                                    <thead>
+                                        <tr>
+                                            <th>Concepto</th>
+                                            <th class="text-center" style="width: 1%">#</th>
+                                            <th class="text-right" style="width: 1%">Tarifa</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+
+                                        <tr>
+
+                                            <td>
+                                                <input type="text" style="display:none;" id="clientId" name="clientId" />
+                                                <input type="text" style="display:none;" id="invoiceId" name="invoiceId" />
+                                                <input type="text" style="display:none;" id="id_precio" name="id_precio" />
+                                                <input class="font600 mb-1" id="lblconcepto" name="lblconcepto" style="border: 0; background-color: transparent;display:none;"  value="Pago del mes servicio Internet"/>
+                                                @*<p class="font600 mb-1" id="lblconcepto"  name="lblconcepto"></p>*@
+                                                <div class="text-muted">Pago del mes servicio Internet</div>
+                                            </td>
+                                            <td class="text-center">1</td>
+                                            <td class="text-right"><span id="lblprecio" name="lblprecio"></span></td>
+                                        </tr>
+
+                                        <tr>
+                                            <td colspan="2" class="font600 text-right">Subtotal</td>
+                                            <td class="text-right"><span id="lblsubtotal" name="lblsubtotal"></span></td>
+                                        </tr>
+                                        <tr class="bg-light">
+                                            <td colspan="2" class="font600 text-right">% servicio</td>
+                                            <td class="text-right">3.6% + $3</td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="2" class="font600 text-right">Cargo servicio</td>
+                                            <td class="text-right"><span id="lblcargoserv" name="lblcargoserv"></span></td>
+                                        </tr>
+                                        <tr class="bg-green text-light">
+                                            <td colspan="2" class="font700 text-right">Total a pagar</td>
+                                            <td class="font700 text-right" style="color:#000;">$<input id="lbltotal" name="lbltotal" style=" width: 80%; background-color: transparent; border: 0; color: #000; font-weight: bold;" readonly /></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal"><i class="fas fa-times"></i> Cerrar</button>
+                    <button type="submit" class="btn btn-primary"><i class="fas fa-check"></i> <i class="far fa-credit-card"></i> Continuar al pago</button>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>
 <script src="~/Scripts/jquery-1.10.2.min.js"></script>
 <script src="~/Scripts/Cliente/Pagos.js"></script>

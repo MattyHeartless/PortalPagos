@@ -114,6 +114,18 @@ body {
     .imgPagos2 {
         display: none;
     }
+    .credit-card-content .credit-card-features {
+  
+        display: flex !important;
+       
+        -ms-flex-wrap: wrap !important;
+        flex-wrap: wrap !important;
+        padding-left: 0;
+        list-style-type: none !important;
+        margin-bottom: 0 !important;
+        margin-top: 15px !important;
+    }
+
 }
 
 a {
@@ -193,6 +205,138 @@ img {
 
     .h1:last-child, .h2:last-child, .h3:last-child, .h4:last-child, .h5:last-child, .h6:last-child, h1:last-child, h2:last-child, h3:last-child, h4:last-child, h5:last-child, h6:last-child {
         margin-bottom: 0;
+    }
+.theme-cyan #header_top {
+    background: #005cab;
+}
+
+    .theme-cyan #header_top .nav-link {
+        color: rgba(255, 255, 255, 0.9);
+    }
+
+        .theme-cyan #header_top .nav-link:hover {
+            color: #fff !important;
+        }
+
+.theme-cyan #left-sidebar {
+    background: #005cab;
+}
+
+    .theme-cyan #left-sidebar .brand-name {
+        color: #fff;
+    }
+
+    .theme-cyan #left-sidebar .nav-tabs {
+        border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+    }
+
+        .theme-cyan #left-sidebar .nav-tabs .nav-link {
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+            .theme-cyan #left-sidebar .nav-tabs .nav-link.active {
+                border-color: #fff;
+                color: #fff;
+            }
+
+    .theme-cyan #left-sidebar .metismenu .g_heading {
+        color: rgba(255, 255, 255, 0.5);
+    }
+
+    .theme-cyan #left-sidebar .metismenu a {
+        color: rgba(255, 255, 255, 0.9);
+    }
+
+        .theme-cyan #left-sidebar .metismenu .active > a,
+        .theme-cyan #left-sidebar .metismenu a:hover {
+            color: #fff;
+        }
+
+.theme-cyan .card-title {
+    color: #005cab;
+}
+
+.theme-cyan .btn-primary {
+    background: #005cab;
+    border: 0;
+}
+
+.theme-cyan.offcanvas-active #header_top {
+    background: #005cab;
+}
+
+.theme-cyan.offcanvas-active.gradient #header_top {
+    background: linear-gradient(145deg, #005cab, #005cab);
+}
+
+.theme-cyan.gradient #header_top {
+    background: transparent;
+}
+
+@media screen and (max-width: 1200px) {
+    .theme-cyan.gradient #header_top {
+        background: linear-gradient(145deg, #005cab, #005cab);
+    }
+}
+
+.theme-cyan.gradient #left-sidebar {
+    background: linear-gradient(145deg, #005cab, #005cab);
+}
+
+.theme-cyan.gradient .btn-primary {
+    background: linear-gradient(145deg, #007aab, #005cab);
+}
+.auth {
+    display: flex;
+    height: 100vh;
+    align-items: center;
+}
+
+    .auth .header-brand {
+        font-size: 30px;
+    }
+
+    .auth .auth_left {
+        background: #fff;
+        display: flex;
+        align-items: center;
+        height: 100vh;
+        width: 400px;
+        padding: 0 20px;
+    }
+
+    .auth .auth_right {
+        width: calc(100% - 400px);
+        text-align: center;
+    }
+
+@media screen and (max-width: 767px) {
+    .auth .auth_right {
+        display: none;
+    }
+}
+
+@media screen and (max-width: 1024px) {
+    .auth .auth_right {
+        width: 380px;
+    }
+}
+
+.auth .auth_right img {
+    width: 500px;
+}
+
+.auth.option2 {
+    background: #AF1D1D;
+}
+
+    .auth.option2 .auth_left {
+        margin: 0 auto;
+        background: transparent;
+    }
+
+    .auth.option2 .card-body {
+        padding: 30px;
     }
 
 /*================================================

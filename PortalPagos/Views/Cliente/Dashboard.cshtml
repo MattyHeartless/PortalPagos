@@ -17,10 +17,10 @@
 <section class="credit-card-area bg-ffffff">
     <div class="container">
         <div class="row align-items-center">
-            <div class="col-lg-7">
+            <div class="col-lg-7 col-12">
                 <div class="credit-card-content">
-                    <span>Bienvenido @Session["Nombre"].ToString()</span>
-                    <h3>Plan de servicio de internet de 30 Mbs velocidad</h3>
+                    <span>Bienvenido @Session["name"].ToString()  @Session["lastname"].ToString()</span>
+                    <h3>Plan de servicio de internet de @Session["service_name"].ToString() velocidad</h3>
                     <p>Te mostramos los últimos detalles de tu servicio de internet </p>
 
                     <ul class="credit-card-features">
@@ -28,37 +28,54 @@
                             <i class="fa-solid fa-circle-dollar-to-slot caliz"></i> Saldo
                         </li>
                         <li style="font-weight:bold;">
-                            <i class="flaticon-checkmark"></i> $0.00
+                            <i class="flaticon-checkmark"></i> $@Session["accountBalance"].ToString()
                         </li>
-                        <li >
-                            <i class="fa-regular fa-calendar-xmark caliz"></i> Último día para pago
-                        </li>
-                        <li style="font-weight:bold;">
-                            <i class="flaticon-checkmark"></i> 15 de agosto de 2023
-                        </li>
+
                         <li>
                             <i class="fa-solid fa-tower-broadcast caliz"></i> Estado del servicio
                         </li>
+                        @if (Session["status"].ToString() == "1")
+                        {
+                            <li style="font-weight:bold;">
+                                <i class="flaticon-checkmark"></i> Activo
+                            </li>
+                        }
+                        else if (Session["status"].ToString() == "3")
+                        {
+                            <li style="font-weight:bold;">
+                                <i class="flaticon-checkmark"></i> Suspendido
+                            </li>
+                        }
+                        else {
+                            <li style="font-weight:bold;">
+                                <i class="flaticon-checkmark"></i> Error al consultar
+                            </li>
+                        }
+
+
+                        <li>
+                            <i class="fa-solid fa-headset caliz"></i> Velocidad de subida
+                        </li>
                         <li style="font-weight:bold;">
-                            <i class="flaticon-checkmark"></i> Activo
+                            <i class="flaticon-checkmark"></i> @Session["uploadSpeed"].ToString() Mbps
                         </li>
                         <li>
-                            <i class="fa-solid fa-headset caliz"></i> Tickets abiertos
+                            <i class="fa-regular fa-calendar-xmark caliz"></i> Siguiente fecha para pago
                         </li>
                         <li style="font-weight:bold;">
-                            <i class="flaticon-checkmark"></i> 2
+                            <i class="flaticon-checkmark"></i> @Session["nextInvoicingDay"].ToString()
                         </li>
                         <li>
-                            <i class="fa-solid fa-toolbox caliz"></i> Siguiente visita de mantenimiento
+                            <i class="fa-solid fa-toolbox caliz"></i> Siguiente monto a pagar
                         </li>
                         <li style="font-weight:bold;">
-                            <i class="flaticon-checkmark"></i> 10 de agosto de 2023
+                            <i class="flaticon-checkmark"></i> $@Session["nextInvoicePrice"].ToString()
                         </li>
                     </ul>
                 </div>
             </div>
 
-            <div class="col-lg-5">
+            <div class="col-lg-5 col-12">
                
                 <div class="credit-card-image-slider owl-carousel owl-theme owl-loaded owl-drag">
 

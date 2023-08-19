@@ -52,7 +52,8 @@ $(document).ready(function () {
                 {
                     "data": null,
                     "render": function (data, type, row) {
-                        return "<button class='btn btn-primary' onclick='getUser(\"" + row.id + "\")'><i class='fas fa-dollar-sign''></i> Pagar</button>"
+
+                        return "<button class='btn btn-primary pay_invoice' data-clientid='"+row.clientId+"' data-invoiceid='"+row.id+"' data-amounttopay='"+row.amountToPay+"'><i class='fas fa-dollar-sign''></i> Pagar</button>"
                     }
                 }
 
@@ -89,5 +90,20 @@ $(document).ready(function () {
         })
 
     })
+
+
+
+    $(document).on("click", ".pay_invoice", function (e) {
+        var price = $(this).data("amounttopay");
+        var service = (parseFloat(price) * 0.0457);
+        var invoiceId = $(this).data("invoiceid");
+        $('#lblprecio').text("$" + price);
+        $('#lblsubtotal').text("$" + price);
+        $('#lblcargoserv').text("$" + service.toFixed(2) + 3);
+        $('#lbltotal').val(parseFloat(price) + service + 3);
+        $('#invoiceId').val(invoiceId);
+        $('#id_precio').val(parseFloat(price));
+        $('#pago-modal').modal("toggle");
+    });
 
 })
