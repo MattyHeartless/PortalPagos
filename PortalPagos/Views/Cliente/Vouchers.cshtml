@@ -1,0 +1,40 @@
+﻿
+@{
+    ViewBag.Title = "View";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<div class="col-10 container mt-5">
+    @*<div class="imgPagos" style="background-image: url('../../Content/payments.svg');"></div>*@
+    <img src="~/Content/payments.svg" class="imgPagos" style="color:white" />
+    <div class="">
+        <img src="~/Content/payments1.svg" class="imgPagos2" style="" />
+        <img src="~/Content/payments2.svg" class="imgPagos2" style="margin-left:20%;" />
+        <img src="~/Content/payments3.svg" class="imgPagos2" style="margin-left:50%;" />
+    </div>
+
+    <div class="card" style="position:relative">
+        <div class="card-body">
+            <div class="table-responsive">
+                <div class="col-sm-12">
+                    <table class="table-hover" style="width: 100%; border-bottom:0px" id="tblVouchers">
+                        <thead>
+                            <tr style="border-bottom: 0 !important; border-color:white">
+                                <th>Factura #</th>
+                                <th>Tipo</th>
+                                <th>Creado</th>
+                                <th>Cantidad</th>
+                                <th>Estatus</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody class="list" style="font-size:13px;"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+<script src="~/Scripts/Cliente/Vouchers.js"></script>

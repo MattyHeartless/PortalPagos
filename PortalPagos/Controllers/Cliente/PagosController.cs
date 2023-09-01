@@ -42,7 +42,7 @@ namespace PortalPagos.Controllers.Cliente
                     inv.status = item.status;
                     inv.type = item.items[0].type;
                     inv.label = item.items[0].label;
-                    inv.clientId = item.clientId;
+                    inv.clientId = Convert.ToInt32( Session["clientId"].ToString());
                     linv.Add(inv);
 
                 }
@@ -57,26 +57,7 @@ namespace PortalPagos.Controllers.Cliente
         }
 
         // Root myDeserializedClass = JsonConvert.DeserializeObject<List<Root>>(myJsonResponse);
-        public class Item
-        {
-            public int id { get; set; }
-            public string type { get; set; }
-            public string label { get; set; }
-            public double price { get; set; }
-            public double quantity { get; set; }
-            public double total { get; set; }
-            public object unit { get; set; }
-            public object tax1Id { get; set; }
-            public object tax2Id { get; set; }
-            public object tax3Id { get; set; }
-            public int serviceId { get; set; }
-            public object serviceSurchargeId { get; set; }
-            public object productId { get; set; }
-            public object feeId { get; set; }
-            public double? discountPrice { get; set; }
-            public double? discountQuantity { get; set; }
-            public double? discountTotal { get; set; }
-        }
+      
 
         public class Invoices
         {
@@ -88,6 +69,26 @@ namespace PortalPagos.Controllers.Cliente
             public string type { get; set; }
             public string label { get; set; }
             public int clientId { get; set; }
+        }
+
+        public class Item
+        {
+            public int id { get; set; }
+            public string type { get; set; }
+            public string label { get; set; }
+            public double price { get; set; }
+            public double quantity { get; set; }
+            public double total { get; set; }
+            public string unit { get; set; }
+            public object tax1Id { get; set; }
+            public object tax2Id { get; set; }
+            public object tax3Id { get; set; }
+            public int? serviceId { get; set; }
+            public object serviceSurchargeId { get; set; }
+            public int? productId { get; set; }
+            public double? discountPrice { get; set; }
+            public double? discountQuantity { get; set; }
+            public double? discountTotal { get; set; }
         }
 
         public class PaymentCover
@@ -103,15 +104,13 @@ namespace PortalPagos.Controllers.Cliente
         public class Root
         {
             public int id { get; set; }
-            public int clientId { get; set; }
             public string number { get; set; }
             public DateTime createdDate { get; set; }
             public DateTime dueDate { get; set; }
-            public DateTime emailSentDate { get; set; }
+            public DateTime? emailSentDate { get; set; }
             public int maturityDays { get; set; }
             public DateTime taxableSupplyDate { get; set; }
-            public object notes { get; set; }
-            public object adminNotes { get; set; }
+            public string notes { get; set; }
             public List<Item> items { get; set; }
             public double subtotal { get; set; }
             public object discount { get; set; }
@@ -126,8 +125,6 @@ namespace PortalPagos.Controllers.Cliente
             public string currencyCode { get; set; }
             public int status { get; set; }
             public List<PaymentCover> paymentCovers { get; set; }
-            public int invoiceTemplateId { get; set; }
-            public int proformaInvoiceTemplateId { get; set; }
             public string organizationName { get; set; }
             public object organizationRegistrationNumber { get; set; }
             public object organizationTaxId { get; set; }
@@ -152,12 +149,13 @@ namespace PortalPagos.Controllers.Cliente
             public object clientStateId { get; set; }
             public string clientZipCode { get; set; }
             public List<object> attributes { get; set; }
-            public bool uncollectible { get; set; }
             public bool proforma { get; set; }
             public object generatedInvoiceId { get; set; }
             public object proformaInvoiceId { get; set; }
             public bool isAppliedVatReverseCharge { get; set; }
         }
+
+
 
         public async Task<ActionResult> CreatePaySession()
         {
@@ -174,20 +172,45 @@ namespace PortalPagos.Controllers.Cliente
                 //long s = Convert.long;
                 //Session["grupo_pago"] = grupo;
                 Session["concepto_pago"] = Concepto;
-
-                var Customeroptions = new CustomerCreateOptions
+                string customerId = "";
+                using (RedZEntities db = new RedZEntities())
                 {
-                    Name = Session["clientId"].ToString(),
-                };
-                //var service = new CustomerService();
-                //service.Create(Customeroptions);
+                    var id_cliente = Convert.ToInt32(Session["clientId"].ToString());
+                    var clientstripe = db.StripeCustomer.Where(a => a.id_cliente == id_cliente).FirstOrDefault();
+                    if (clientstripe != null)
+                    {
+                        var service = new CustomerService();
+                        var resposne = service.Get(clientstripe.stripe_idcliente);
+                        customerId = clientstripe.stripe_idcliente;
+                    }
 
-                //var id = service.Client;
+                    else
+                    {
+                        var name = Session["name"].ToString() + " " + Session["lastname"].ToString();
+                        var CustomerOptions = new CustomerCreateOptions
+                        {
+                            Name = name,
+                        };
+                        var service = new CustomerService();
+                        var resposne = service.Create(CustomerOptions);
+
+                        StripeCustomer sc = new StripeCustomer();
+                        sc.id_cliente = id_cliente;
+                        sc.stripe_idcliente = resposne.Id;
+                        db.StripeCustomer.Add(sc);
+                        db.SaveChanges();
+                        Session["StripeCustomerID"] = resposne.Id;
+
+                        customerId = resposne.Id;
+
+                    }
+                }
 
 
 
                 var options = new SessionCreateOptions
                 {
+                    Customer = customerId,
                     PaymentMethodTypes = new List<string>
                     {
                         "card",
@@ -221,6 +244,7 @@ namespace PortalPagos.Controllers.Cliente
                             {"Customer", Session["clientId"].ToString() },
                             //{"grupo_pago" , grupo.ToString()},
                             {"Concepto",  Concepto},
+                            {"invoice_id", invoiceId }
                             
                         }
 
@@ -228,6 +252,9 @@ namespace PortalPagos.Controllers.Cliente
                 };
                 var serviceP = new SessionService();
                 Session session = serviceP.Create(options);
+                Session["PaySessionId"] = session.Id;
+              
+           
 
                 //Response.Headers.Add("Location", session.Url);
                 var url = session.Url;
@@ -245,34 +272,26 @@ namespace PortalPagos.Controllers.Cliente
         {
             using (var clients = new HttpClient())
             {
-                HttpClient client = new HttpClient();
-                PortalPagos.JsonClasses.Invoices.InvoiceDetails.Root invoice = new PortalPagos.JsonClasses.Invoices.InvoiceDetails.Root();
-                System.Net.ServicePointManager.SecurityProtocol = System.Net.SecurityProtocolType.Tls12;
-                ServicePointManager.ServerCertificateValidationCallback = new RemoteCertificateValidationCallback(ValidateServerCertificate);
-                client.BaseAddress = new Uri("https://189.199.227.94/crm/api/v1.0/");
-                client.DefaultRequestHeaders.Accept.Clear();
-                client.DefaultRequestHeaders.Add("X-Auth-App-Key", "Qygxrlhlu9VvqOssEjJXW+M7MoCQcasxMC6X7wf/JFDJke1VOidFhRxJQ7GU44Bq");
-                //                client.DefaultRequestHeaders.Authorization =
-                //new AuthenticationHeaderValue("X-Auth-App-Key", "Qygxrlhlu9VvqOssEjJXW+M7MoCQcasxMC6X7wf/JFDJke1VOidFhRxJQ7GU44Bq");
-                client.DefaultRequestHeaders.Accept.Add(
-                    new MediaTypeWithQualityHeaderValue("application/json"));
-                HttpResponseMessage response = await client.GetAsync("invoices/"+invoiceId);
-                if (response.IsSuccessStatusCode)
-                {
-                    var s = await response.Content.ReadAsStringAsync();
-                    invoice = JsonConvert.DeserializeObject<PortalPagos.JsonClasses.Invoices.InvoiceDetails.Root>(s);
+                HttpHandler http = new HttpHandler("GET", "Qygxrlhlu9VvqOssEjJXW+M7MoCQcasxMC6X7wf/JFDJke1VOidFhRxJQ7GU44Bq", "https://189.199.227.94/crm/api/v1.0/", "invoices/" + invoiceId, "");
+                var resp = await http.doRequest();
+                
+            
+                PortalPagos.JsonClasses.Invoices.InvoiceDetails.Root invoice = new PortalPagos.JsonClasses.Invoices.InvoiceDetails.Root();    
+                    invoice = JsonConvert.DeserializeObject<PortalPagos.JsonClasses.Invoices.InvoiceDetails.Root>(resp);
                     Session["invoiceId"] = invoice.id;
                     Session["ammountToPay"] = invoice.amountToPay;
                     Session["Total"] = invoice.amountToPay + ((invoice.amountToPay * 0.0457) + 3);
                     Session["clientId"] = invoice.clientId;
                     return true;
-                }
-                else
-                    return false;
+                
+               
 
 
 
             }
         }
+
+
+        
     }
 }

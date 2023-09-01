@@ -15,6 +15,10 @@ using Newtonsoft.Json;
 using PortalPagos.JsonClasses.Cliente.InfoCliente;
 using System.Globalization;
 using PortalPagos.Models;
+using Stripe;
+using Stripe.Checkout;
+using PortalPagos.JsonClasses.Stripe.CheckoutSession;
+using System.Threading;
 
 namespace PortalPagos.Controllers
 {
@@ -41,11 +45,23 @@ namespace PortalPagos.Controllers
                 Session["service_name"] = cs[0].name;
                 Session["downloadSpeed"] = cs[0].downloadSpeed;
                 Session["uploadSpeed"] = cs[0].uploadSpeed;
+                using (RedZEntities db = new RedZEntities())
+                {
+                    var id = Convert.ToInt32(Session["clientId"].ToString());
+                    var usuario = db.StripeCustomer.Where(a => a.id_cliente == id).FirstOrDefault();
+                    
+                    Task.Run(() => SaveVouchersPaid(usuario.stripe_idcliente, id));
+                    
+                }
+       
+
                 return View();
             }
             else
                 return RedirectToAction("Index", "Home");
         }
+
+        
         public static bool ValidateServerCertificate(Object sender, X509Certificate certificate, X509Chain chain, SslPolicyErrors sslPolicyErrors)
         {
             return true;
@@ -110,19 +126,129 @@ namespace PortalPagos.Controllers
 
         public async Task<JsonResult> test()
         {
+            StripeConfiguration.ApiKey = "sk_test_51Nfr2oLyLqVQHv3YkUaVX2EfN99WvsqVRayeHhWxVKcK8fDCBZwJc60M2TKpNY9OLLxqyj6e0hpszFEIBbtdl6mE00LSbYYMb8";
+            var service = new PaymentIntentService();
+            var response = service.Get("pi_3NlbrdLyLqVQHv3Y16snZ5tU");
+            
             return Json("");
         }
 
 
         // Root myDeserializedClass = JsonConvert.DeserializeObject<List<Root>>(myJsonResponse);
-        
-
-       
-
-    
 
 
+        public JsonResult GetVouchers()
+        {
+            StripeConfiguration.ApiKey = "sk_test_51Nfr2oLyLqVQHv3YkUaVX2EfN99WvsqVRayeHhWxVKcK8fDCBZwJc60M2TKpNY9OLLxqyj6e0hpszFEIBbtdl6mE00LSbYYMb8";
+            Dictionary<string, Dictionary<string, string>> s = new Dictionary<string, Dictionary<string, string>>();
 
+            using (RedZEntities db = new RedZEntities())
+            {
+                var id = Convert.ToInt32(Session["clientId"].ToString());
+                var usuario = db.StripeCustomer.Where(a => a.id_cliente == id).FirstOrDefault();
+                if (usuario != null)
+                {
+                    var options = new PaymentIntentListOptions
+                    {
+                        Customer = usuario.stripe_idcliente,
+                    };
+                    var service = new PaymentIntentService();
+                    StripeList<PaymentIntent> paymentIntents = service.List(
+                      options);
+                    var oxxo = paymentIntents.Where(a => a.PaymentMethodTypes[0] == "oxxo").Select(b=> new { b.Amount, b.Status, b.NextAction, b.Created, b.Metadata}).ToList();
+                    
+                    return Json(oxxo);
+                }
+                else
+                    return Json("NOK");
+
+            }
+
+        }
+        public async void SaveVouchersPaid(string StripeUser, int clientId)
+        {
+            using (RedZEntities db = new RedZEntities())
+            {
+                StripeConfiguration.ApiKey = "sk_test_51Nfr2oLyLqVQHv3YkUaVX2EfN99WvsqVRayeHhWxVKcK8fDCBZwJc60M2TKpNY9OLLxqyj6e0hpszFEIBbtdl6mE00LSbYYMb8";
+                var options = new PaymentIntentListOptions
+                {
+                    Customer = StripeUser,
+                };
+                var service = new PaymentIntentService();
+                StripeList<PaymentIntent> paymentIntents = service.List(
+                  options);
+                var oxxo = paymentIntents.Where(a => a.PaymentMethodTypes[0] == "oxxo").ToList();
+                foreach (var item in oxxo)
+                {
+                    
+                    if (item.Metadata.ContainsKey("invoice_id") && item.Status == "succeeded")
+                    {
+                        var invoiceId = Convert.ToInt32(item.Metadata["invoice_id"]);
+                        var voucher = db.Pagos.Where(a => a.id_invoice == invoiceId).FirstOrDefault();
+                        if(voucher == null)
+                        {
+                            Pagos p = new Pagos();
+                            p.id_cliente = clientId;
+                            p.id_invoice = Convert.ToInt32(invoiceId);
+                            p.monto = Convert.ToDecimal(item.Amount);
+                            p.fecha_voucher = DateTime.Now;
+                            p.tipo = "OXXO";
+                            db.Pagos.Add(p);
+                            db.SaveChanges();
+                            var ammount = await LoadInvoiceQty(invoiceId);
+                            var httpWebRequest = (HttpWebRequest)WebRequest.Create("https://189.199.227.94/crm/api/v1.0/payments");
+                            httpWebRequest.ContentType = "application/json";
+                            httpWebRequest.Headers.Add("X-Auth-App-Key", "Qygxrlhlu9VvqOssEjJXW+M7MoCQcasxMC6X7wf/JFDJke1VOidFhRxJQ7GU44Bq");
+                            httpWebRequest.Method = "POST";
+
+                            using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))
+                            {
+                                //string json = "{\"user\":\"test\"," +
+                                //              "\"password\":\"bla\"}";
+                                //Json POST hacia el CRM 
+                                var jsonn = "{\"currencyCode\": \"MXN\",\"applyToInvoicesAutomatically\": true,"
+                                             + "\"invoiceIds\": [" + invoiceId + "],"
+                                             + "\"clientId\": " + clientId.ToString() + ","
+                                             + "\"methodId\": \"1dd098fa-5d63-4c8d-88b7-3c27ffbbb6ae\","
+                                             + "\"checkNumber\": \"\","
+                                             + "\"createdDate\": \"" + DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss") + "+000\","
+                                             + "\"amount\": " + ammount + ","
+                                             + "\"note\": \"Pago del mes servicio Internet\","
+                                             + "\"providerPaymentTime\": \"" + DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss") + "+000\"}";
+                                streamWriter.Write(jsonn);
+                            }
+
+                            var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
+                            using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
+                            {
+                                var result = streamReader.ReadToEnd();
+                            }
+                        }
+                    }
+                }
+            }
+            
+        }
+
+
+
+
+        public async Task<double> LoadInvoiceQty(int invoiceId)
+        {
+            using (var clients = new HttpClient())
+            {
+                HttpHandler http = new HttpHandler("GET", "Qygxrlhlu9VvqOssEjJXW+M7MoCQcasxMC6X7wf/JFDJke1VOidFhRxJQ7GU44Bq", "https://189.199.227.94/crm/api/v1.0/", "invoices/" + invoiceId, "");
+                var resp = await http.doRequest();
+                PortalPagos.JsonClasses.Invoices.InvoiceDetails.Root invoice = new PortalPagos.JsonClasses.Invoices.InvoiceDetails.Root();
+                invoice = JsonConvert.DeserializeObject<PortalPagos.JsonClasses.Invoices.InvoiceDetails.Root>(resp);
+                return invoice.amountToPay; 
+
+
+
+
+
+            }
+        }
 
 
         public ActionResult Pagos()
@@ -133,6 +259,21 @@ namespace PortalPagos.Controllers
             }
             else
                 return RedirectToAction("Index", "Home");
+        }
+
+        public ActionResult Vouchers()
+        {
+            if (Session != null && Session["Session"] != null && Session["Session"].ToString() == "session_created")
+            {
+                return View();
+            }
+            else
+                return RedirectToAction("Index", "Home");
+        }
+
+        public void testApi()
+        {
+
         }
 
         public async Task<ActionResult> success()
@@ -155,8 +296,8 @@ namespace PortalPagos.Controllers
                                  + "\"clientId\": " + Session["clientId"].ToString() + ","
                                  + "\"methodId\": \"1dd098fa-5d63-4c8d-88b7-3c27ffbbb6ae\","
                                  + "\"checkNumber\": \"\","
-                                 + "\"createdDate\": \""+ DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss") + "+000\","
-                                 + "\"amount\": "+ Session["ammountToPay"].ToString() + ","
+                                 + "\"createdDate\": \"" + DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss") + "+000\","
+                                 + "\"amount\": " + Session["ammountToPay"].ToString() + ","
                                  + "\"note\": \"Pago del mes servicio Internet\","
                                  + "\"providerPaymentTime\": \"" + DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss") + "+000\"}";
                     streamWriter.Write(jsonn);
@@ -167,6 +308,41 @@ namespace PortalPagos.Controllers
                 {
                     var result = streamReader.ReadToEnd();
                 }
+
+                StripeConfiguration.ApiKey = "sk_test_51Nfr2oLyLqVQHv3YkUaVX2EfN99WvsqVRayeHhWxVKcK8fDCBZwJc60M2TKpNY9OLLxqyj6e0hpszFEIBbtdl6mE00LSbYYMb8";
+                Dictionary<string, Dictionary<string, string>> s = new Dictionary<string, Dictionary<string, string>>();
+
+                //var service = new SessionService();
+                //var session = service.Get();
+
+
+
+                //var options = new PaymentIntentListOptions
+                //{
+                //    Customer = "4",
+                //};
+                //var service = new PaymentIntentService();
+                //StripeList<PaymentIntent> paymentIntents = service.List(options);
+
+                //foreach (var item in paymentIntents.Data)
+                //{
+
+                //}
+
+
+                using (RedZEntities db = new RedZEntities())
+                {
+                    Pagos p = new Pagos();
+                    p.id_cliente = Convert.ToInt32( Session["clientId"].ToString());
+                    p.id_invoice = Convert.ToInt32(Session["invoiceId"].ToString());
+                    p.monto = Convert.ToDecimal( Session["Total"].ToString());
+                    p.fecha = DateTime.Now;
+                    p.tipo = "Tarjeta";
+                    db.Pagos.Add(p);
+                    db.SaveChanges();
+                }
+
+
             }
             return View();
         
@@ -176,6 +352,8 @@ namespace PortalPagos.Controllers
         {
             return View();
         }
+
+       
 
       
 

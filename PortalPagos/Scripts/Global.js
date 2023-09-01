@@ -15,6 +15,15 @@
     });
 }
 
+function formateOnlyDate1(fd) {
+    if (fd != "" && fd != "null" && fd != null) {
+        f = new Date(parseInt(fd.substr(6)));
+        fecha = ("0" + (f.getDate())).slice(-2) + "/" + ("0" + (f.getMonth() + 1)).slice(-2) + "/" + f.getFullYear();
+    } else fecha = "";
+    return fecha;
+}
+
+
 function getPath() {
     var origin = window.location.origin;
     var $Patch;
@@ -23,7 +32,9 @@ function getPath() {
     }else if (origin == "http://192.168.100.38:61277") {
         $Patch = origin + "/";
     }
-    else {
+    else if (origin == "http://10.248.210.95:61277") {
+        $Patch = origin + "/";
+    }else {
         $Patch = origin + "/REDZ";
     }
     return $Patch;
