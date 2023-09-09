@@ -7,6 +7,10 @@
       <Diagram DiagramId="6442600c6c594d32b4b027dc598589b7" Name="Diagram1">
         <EntityTypeShape EntityType="RedZModel.Pagos" Width="1.5" PointX="0.75" PointY="0.75" />
         <EntityTypeShape EntityType="RedZModel.StripeCustomer" Width="1.5" PointX="3.375" PointY="0.75" />
+        <EntityTypeShape EntityType="RedZModel.DatosFiscales" Width="1.5" PointX="3.375" PointY="3.75" />
+        <EntityTypeShape EntityType="RedZModel.Facturacion" Width="1.5" PointX="0.75" PointY="4.75" />
+        <EntityTypeShape EntityType="RedZModel.PagosSinTimbrar" Width="1.5" PointX="5.375" PointY="0.75" />
+        <EntityTypeShape EntityType="RedZModel.DatosFacturacion" Width="1.5" PointX="5.375" PointY="3.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

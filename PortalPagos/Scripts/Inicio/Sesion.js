@@ -1,5 +1,7 @@
 ﻿$(document).ready(function (e) {
+    
     $('#btn_login').click(function (e) {
+    
         var username = $('#username').val();
         var key = $('#key').val();
         if (username != "") {

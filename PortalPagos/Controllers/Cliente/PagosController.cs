@@ -282,6 +282,7 @@ namespace PortalPagos.Controllers.Cliente
                     Session["ammountToPay"] = invoice.amountToPay;
                     Session["Total"] = invoice.amountToPay + ((invoice.amountToPay * 0.0457) + 3);
                     Session["clientId"] = invoice.clientId;
+                    Session["invoice"] = invoice.number;
                     return true;
                 
                

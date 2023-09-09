@@ -5,6 +5,33 @@
     <!-- SSDL content -->
     <edmx:StorageModels>
     <Schema Namespace="RedZModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2005" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="DatosFiscales">
+          <Key>
+            <PropertyRef Name="Id_DatFis" />
+          </Key>
+          <Property Name="Id_DatFis" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="id_cliente" Type="int" Nullable="false" />
+          <Property Name="nombre" Type="varchar" MaxLength="200" />
+          <Property Name="rfc" Type="varchar" MaxLength="25" />
+          <Property Name="uso_cfdi" Type="varchar" MaxLength="10" />
+          <Property Name="regimen_fiscal" Type="varchar" MaxLength="10" />
+          <Property Name="direccion" Type="varchar" MaxLength="250" />
+          <Property Name="colonia" Type="varchar" MaxLength="200" />
+          <Property Name="pais" Type="varchar" MaxLength="10" />
+          <Property Name="estado" Type="varchar" MaxLength="10" />
+          <Property Name="codigo_postal" Type="varchar" MaxLength="20" />
+          <Property Name="fecha" Type="datetime" />
+        </EntityType>
+        <EntityType Name="Facturacion">
+          <Key>
+            <PropertyRef Name="Id_Fact" />
+          </Key>
+          <Property Name="Id_Fact" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="id_invoice" Type="int" Nullable="false" />
+          <Property Name="fecha_timbrado" Type="datetime" />
+          <Property Name="folio_timbre" Type="varchar" MaxLength="25" />
+          <Property Name="CFDI" Type="varchar(max)" />
+        </EntityType>
         <EntityType Name="Pagos">
           <Key>
             <PropertyRef Name="Id_Pago" />
@@ -13,7 +40,7 @@
           <Property Name="id_invoice" Type="int" Nullable="false" />
           <Property Name="id_cliente" Type="int" Nullable="false" />
           <Property Name="invoice" Type="varchar" MaxLength="15" />
-          <Property Name="monto" Type="decimal" Precision="18" Scale="0" />
+          <Property Name="monto" Type="decimal" Precision="18" Scale="2" />
           <Property Name="fecha" Type="datetime" />
           <Property Name="fecha_voucher" Type="datetime" />
           <Property Name="tipo" Type="varchar" MaxLength="30" />
@@ -26,9 +53,83 @@
           <Property Name="id_cliente" Type="int" />
           <Property Name="stripe_idcliente" Type="varchar" MaxLength="20" />
         </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'RedZ.dbo.DatosFacturacion' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="DatosFacturacion">
+          <Key>
+            <PropertyRef Name="id_invoice" />
+            <PropertyRef Name="fecha_timbrado" />
+            <PropertyRef Name="id_cliente" />
+          </Key>
+          <Property Name="invoice" Type="varchar" MaxLength="15" />
+          <Property Name="id_invoice" Type="int" Nullable="false" />
+          <Property Name="fecha" Type="varchar" MaxLength="30" />
+          <Property Name="fecha_timbrado" Type="varchar" MaxLength="30" Nullable="false" />
+          <Property Name="tipo" Type="varchar" MaxLength="30" />
+          <Property Name="id_cliente" Type="int" Nullable="false" />
+          <Property Name="monto" Type="decimal" Precision="18" Scale="2" />
+          <Property Name="monto_iva" Type="numeric" Precision="21" Scale="4" />
+          <Property Name="nombre" Type="varchar" MaxLength="200" />
+          <Property Name="rfc" Type="varchar" MaxLength="25" />
+          <Property Name="uso_cfdi" Type="varchar" MaxLength="10" />
+          <Property Name="regimen_fiscal" Type="varchar" MaxLength="10" />
+          <Property Name="direccion" Type="varchar" MaxLength="250" />
+          <Property Name="colonia" Type="varchar" MaxLength="200" />
+          <Property Name="pais" Type="varchar" MaxLength="10" />
+          <Property Name="estado" Type="varchar" MaxLength="10" />
+          <Property Name="codigo_postal" Type="varchar" MaxLength="20" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'RedZ.dbo.PagosSinTimbrar' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="PagosSinTimbrar">
+          <Key>
+            <PropertyRef Name="id_invoice" />
+            <PropertyRef Name="fecha_timbrado" />
+            <PropertyRef Name="id_cliente" />
+          </Key>
+          <Property Name="invoice" Type="varchar" MaxLength="15" />
+          <Property Name="id_invoice" Type="int" Nullable="false" />
+          <Property Name="fecha" Type="varchar" MaxLength="30" />
+          <Property Name="fecha_timbrado" Type="varchar" MaxLength="30" Nullable="false" />
+          <Property Name="tipo" Type="varchar" MaxLength="30" />
+          <Property Name="id_cliente" Type="int" Nullable="false" />
+        </EntityType>
         <EntityContainer Name="RedZModelStoreContainer">
+          <EntitySet Name="DatosFiscales" EntityType="Self.DatosFiscales" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Facturacion" EntityType="Self.Facturacion" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Pagos" EntityType="Self.Pagos" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="StripeCustomer" EntityType="Self.StripeCustomer" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="DatosFacturacion" EntityType="Self.DatosFacturacion" store:Type="Views" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [DatosFacturacion].[invoice] AS [invoice], 
+    [DatosFacturacion].[id_invoice] AS [id_invoice], 
+    [DatosFacturacion].[fecha] AS [fecha], 
+    [DatosFacturacion].[fecha_timbrado] AS [fecha_timbrado], 
+    [DatosFacturacion].[tipo] AS [tipo], 
+    [DatosFacturacion].[id_cliente] AS [id_cliente], 
+    [DatosFacturacion].[monto] AS [monto], 
+    [DatosFacturacion].[monto_iva] AS [monto_iva], 
+    [DatosFacturacion].[nombre] AS [nombre], 
+    [DatosFacturacion].[rfc] AS [rfc], 
+    [DatosFacturacion].[uso_cfdi] AS [uso_cfdi], 
+    [DatosFacturacion].[regimen_fiscal] AS [regimen_fiscal], 
+    [DatosFacturacion].[direccion] AS [direccion], 
+    [DatosFacturacion].[colonia] AS [colonia], 
+    [DatosFacturacion].[pais] AS [pais], 
+    [DatosFacturacion].[estado] AS [estado], 
+    [DatosFacturacion].[codigo_postal] AS [codigo_postal]
+    FROM [dbo].[DatosFacturacion] AS [DatosFacturacion]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="PagosSinTimbrar" EntityType="Self.PagosSinTimbrar" store:Type="Views" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [PagosSinTimbrar].[invoice] AS [invoice], 
+    [PagosSinTimbrar].[id_invoice] AS [id_invoice], 
+    [PagosSinTimbrar].[fecha] AS [fecha], 
+    [PagosSinTimbrar].[fecha_timbrado] AS [fecha_timbrado], 
+    [PagosSinTimbrar].[tipo] AS [tipo], 
+    [PagosSinTimbrar].[id_cliente] AS [id_cliente]
+    FROM [dbo].[PagosSinTimbrar] AS [PagosSinTimbrar]</DefiningQuery>
+          </EntitySet>
         </EntityContainer>
       </Schema></edmx:StorageModels>
     <!-- CSDL content -->
@@ -37,6 +138,10 @@
         <EntityContainer Name="RedZEntities" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="Pagos" EntityType="RedZModel.Pagos" />
           <EntitySet Name="StripeCustomer" EntityType="RedZModel.StripeCustomer" />
+          <EntitySet Name="DatosFiscales" EntityType="RedZModel.DatosFiscales" />
+          <EntitySet Name="Facturacion" EntityType="RedZModel.Facturacion" />
+          <EntitySet Name="PagosSinTimbrar" EntityType="RedZModel.PagosSinTimbrar" />
+          <EntitySet Name="DatosFacturacion" EntityType="RedZModel.DatosFacturacion" />
         </EntityContainer>
         <EntityType Name="Pagos">
           <Key>
@@ -46,7 +151,7 @@
           <Property Name="id_invoice" Type="Int32" Nullable="false" />
           <Property Name="id_cliente" Type="Int32" Nullable="false" />
           <Property Name="invoice" Type="String" MaxLength="15" FixedLength="false" Unicode="false" />
-          <Property Name="monto" Type="Decimal" Precision="18" Scale="0" />
+          <Property Name="monto" Type="Decimal" Precision="18" Scale="2" />
           <Property Name="fecha" Type="DateTime" Precision="3" />
           <Property Name="fecha_voucher" Type="DateTime" Precision="3" />
           <Property Name="tipo" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
@@ -58,6 +163,70 @@
           <Property Name="id_stcust" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="id_cliente" Type="Int32" />
           <Property Name="stripe_idcliente" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="DatosFiscales">
+          <Key>
+            <PropertyRef Name="Id_DatFis" />
+          </Key>
+          <Property Name="Id_DatFis" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="id_cliente" Type="Int32" Nullable="false" />
+          <Property Name="nombre" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="rfc" Type="String" MaxLength="25" FixedLength="false" Unicode="false" />
+          <Property Name="uso_cfdi" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="regimen_fiscal" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="direccion" Type="String" MaxLength="250" FixedLength="false" Unicode="false" />
+          <Property Name="colonia" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="pais" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="estado" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="codigo_postal" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="fecha" Type="DateTime" Precision="3" />
+        </EntityType>
+        <EntityType Name="Facturacion">
+          <Key>
+            <PropertyRef Name="Id_Fact" />
+          </Key>
+          <Property Name="Id_Fact" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="id_invoice" Type="Int32" Nullable="false" />
+          <Property Name="fecha_timbrado" Type="DateTime" Precision="3" />
+          <Property Name="folio_timbre" Type="String" MaxLength="25" FixedLength="false" Unicode="false" />
+          <Property Name="CFDI" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="PagosSinTimbrar">
+          <Key>
+            <PropertyRef Name="id_invoice" />
+            <PropertyRef Name="fecha_timbrado" />
+            <PropertyRef Name="id_cliente" />
+          </Key>
+          <Property Name="invoice" Type="String" MaxLength="15" FixedLength="false" Unicode="false" />
+          <Property Name="id_invoice" Type="Int32" Nullable="false" />
+          <Property Name="fecha" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
+          <Property Name="fecha_timbrado" Type="String" Nullable="false" MaxLength="30" FixedLength="false" Unicode="false" />
+          <Property Name="tipo" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
+          <Property Name="id_cliente" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="DatosFacturacion">
+          <Key>
+            <PropertyRef Name="id_invoice" />
+            <PropertyRef Name="fecha_timbrado" />
+            <PropertyRef Name="id_cliente" />
+          </Key>
+          <Property Name="invoice" Type="String" MaxLength="15" FixedLength="false" Unicode="false" />
+          <Property Name="id_invoice" Type="Int32" Nullable="false" />
+          <Property Name="fecha" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
+          <Property Name="fecha_timbrado" Type="String" Nullable="false" MaxLength="30" FixedLength="false" Unicode="false" />
+          <Property Name="tipo" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
+          <Property Name="id_cliente" Type="Int32" Nullable="false" />
+          <Property Name="monto" Type="Decimal" Precision="18" Scale="2" />
+          <Property Name="monto_iva" Type="Decimal" Precision="21" Scale="4" />
+          <Property Name="nombre" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="rfc" Type="String" MaxLength="25" FixedLength="false" Unicode="false" />
+          <Property Name="uso_cfdi" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="regimen_fiscal" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="direccion" Type="String" MaxLength="250" FixedLength="false" Unicode="false" />
+          <Property Name="colonia" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="pais" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="estado" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="codigo_postal" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
         </EntityType>
       </Schema>
     </edmx:ConceptualModels>
@@ -85,6 +254,70 @@
                 <ScalarProperty Name="stripe_idcliente" ColumnName="stripe_idcliente" />
                 <ScalarProperty Name="id_cliente" ColumnName="id_cliente" />
                 <ScalarProperty Name="id_stcust" ColumnName="id_stcust" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="DatosFiscales">
+            <EntityTypeMapping TypeName="RedZModel.DatosFiscales">
+              <MappingFragment StoreEntitySet="DatosFiscales">
+                <ScalarProperty Name="fecha" ColumnName="fecha" />
+                <ScalarProperty Name="codigo_postal" ColumnName="codigo_postal" />
+                <ScalarProperty Name="estado" ColumnName="estado" />
+                <ScalarProperty Name="pais" ColumnName="pais" />
+                <ScalarProperty Name="colonia" ColumnName="colonia" />
+                <ScalarProperty Name="direccion" ColumnName="direccion" />
+                <ScalarProperty Name="regimen_fiscal" ColumnName="regimen_fiscal" />
+                <ScalarProperty Name="uso_cfdi" ColumnName="uso_cfdi" />
+                <ScalarProperty Name="rfc" ColumnName="rfc" />
+                <ScalarProperty Name="nombre" ColumnName="nombre" />
+                <ScalarProperty Name="id_cliente" ColumnName="id_cliente" />
+                <ScalarProperty Name="Id_DatFis" ColumnName="Id_DatFis" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Facturacion">
+            <EntityTypeMapping TypeName="RedZModel.Facturacion">
+              <MappingFragment StoreEntitySet="Facturacion">
+                <ScalarProperty Name="CFDI" ColumnName="CFDI" />
+                <ScalarProperty Name="folio_timbre" ColumnName="folio_timbre" />
+                <ScalarProperty Name="fecha_timbrado" ColumnName="fecha_timbrado" />
+                <ScalarProperty Name="id_invoice" ColumnName="id_invoice" />
+                <ScalarProperty Name="Id_Fact" ColumnName="Id_Fact" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PagosSinTimbrar">
+            <EntityTypeMapping TypeName="RedZModel.PagosSinTimbrar">
+              <MappingFragment StoreEntitySet="PagosSinTimbrar">
+                <ScalarProperty Name="id_cliente" ColumnName="id_cliente" />
+                <ScalarProperty Name="tipo" ColumnName="tipo" />
+                <ScalarProperty Name="fecha_timbrado" ColumnName="fecha_timbrado" />
+                <ScalarProperty Name="fecha" ColumnName="fecha" />
+                <ScalarProperty Name="id_invoice" ColumnName="id_invoice" />
+                <ScalarProperty Name="invoice" ColumnName="invoice" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="DatosFacturacion">
+            <EntityTypeMapping TypeName="RedZModel.DatosFacturacion">
+              <MappingFragment StoreEntitySet="DatosFacturacion">
+                <ScalarProperty Name="codigo_postal" ColumnName="codigo_postal" />
+                <ScalarProperty Name="estado" ColumnName="estado" />
+                <ScalarProperty Name="pais" ColumnName="pais" />
+                <ScalarProperty Name="colonia" ColumnName="colonia" />
+                <ScalarProperty Name="direccion" ColumnName="direccion" />
+                <ScalarProperty Name="regimen_fiscal" ColumnName="regimen_fiscal" />
+                <ScalarProperty Name="uso_cfdi" ColumnName="uso_cfdi" />
+                <ScalarProperty Name="rfc" ColumnName="rfc" />
+                <ScalarProperty Name="nombre" ColumnName="nombre" />
+                <ScalarProperty Name="monto_iva" ColumnName="monto_iva" />
+                <ScalarProperty Name="monto" ColumnName="monto" />
+                <ScalarProperty Name="id_cliente" ColumnName="id_cliente" />
+                <ScalarProperty Name="tipo" ColumnName="tipo" />
+                <ScalarProperty Name="fecha_timbrado" ColumnName="fecha_timbrado" />
+                <ScalarProperty Name="fecha" ColumnName="fecha" />
+                <ScalarProperty Name="id_invoice" ColumnName="id_invoice" />
+                <ScalarProperty Name="invoice" ColumnName="invoice" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

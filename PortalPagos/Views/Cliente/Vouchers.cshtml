@@ -3,38 +3,42 @@
     ViewBag.Title = "View";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
+<style>
+    th.dt-center, td.dt-center {
+        text-align: center;
+    }
+</style>
+<section class="open-account-area ptb-100" id="section_form">
+    <div class="container">
+        <div class="section-title">
+            <h2>Vouchers de pago</h2>
+            <p>Si elegiste como método de pago pagar en efectivo en OXXO, aquí puedes acceder al voucher creado y revisar el estado en el que se encuentra.</p>
+        </div>
+        <div class="open-account-form">
+            <div class="table-area pb-100">
+                <div class="container">
 
-
-<div class="col-10 container mt-5">
-    @*<div class="imgPagos" style="background-image: url('../../Content/payments.svg');"></div>*@
-    <img src="~/Content/payments.svg" class="imgPagos" style="color:white" />
-    <div class="">
-        <img src="~/Content/payments1.svg" class="imgPagos2" style="" />
-        <img src="~/Content/payments2.svg" class="imgPagos2" style="margin-left:20%;" />
-        <img src="~/Content/payments3.svg" class="imgPagos2" style="margin-left:50%;" />
-    </div>
-
-    <div class="card" style="position:relative">
-        <div class="card-body">
-            <div class="table-responsive">
-                <div class="col-sm-12">
-                    <table class="table-hover" style="width: 100%; border-bottom:0px" id="tblVouchers">
-                        <thead>
-                            <tr style="border-bottom: 0 !important; border-color:white">
-                                <th>Factura #</th>
-                                <th>Tipo</th>
-                                <th>Creado</th>
-                                <th>Cantidad</th>
-                                <th>Estatus</th>
-                                <th></th>
-                            </tr>
-                        </thead>
-                        <tbody class="list" style="font-size:13px;"></tbody>
-                    </table>
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-striped mt-2" style="width: 100%; border-bottom:0px" id="tblVouchers">
+                            <thead>
+                                <tr style="border-bottom: 0 !important; border-color:white">
+                                    <th>Factura #</th>
+                                    <th>Tipo</th>
+                                    <th>Creado</th>
+                                    <th>Cantidad</th>
+                                    <th>Estatus</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody class="list" style="font-size:13px;"></tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
+
     </div>
-</div>
+</section>
+
 <script src="~/Scripts/jquery-1.10.2.min.js"></script>
 <script src="~/Scripts/Cliente/Vouchers.js"></script>

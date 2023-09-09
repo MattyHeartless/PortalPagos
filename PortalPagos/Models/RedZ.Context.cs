@@ -27,5 +27,9 @@ namespace PortalPagos.Models
     
         public virtual DbSet<Pagos> Pagos { get; set; }
         public virtual DbSet<StripeCustomer> StripeCustomer { get; set; }
+        public virtual DbSet<DatosFiscales> DatosFiscales { get; set; }
+        public virtual DbSet<Facturacion> Facturacion { get; set; }
+        public virtual DbSet<PagosSinTimbrar> PagosSinTimbrar { get; set; }
+        public virtual DbSet<DatosFacturacion> DatosFacturacion { get; set; }
     }
 }

@@ -116,7 +116,7 @@ body {
     }
     .credit-card-content .credit-card-features {
   
-        display: flex !important;
+        display: block !important;
        
         -ms-flex-wrap: wrap !important;
         flex-wrap: wrap !important;
@@ -6247,7 +6247,7 @@ Open Account Area CSS
     background-color: #ffffff;
     -webkit-box-shadow: 0 0 10px rgba(51, 51, 51, 0.1);
     box-shadow: 0 0 10px rgba(51, 51, 51, 0.1);
-    max-width: 810px;
+    max-width: 1000px;
     margin: auto;
 }
 

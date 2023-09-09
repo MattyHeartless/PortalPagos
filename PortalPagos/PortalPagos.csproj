@@ -186,6 +186,7 @@
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\ClienteController.cs" />
+    <Compile Include="Controllers\Cliente\FacturacionController.cs" />
     <Compile Include="Controllers\Cliente\PagosController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\SessionController.cs" />
@@ -199,9 +200,21 @@
     <Compile Include="JsonClasses\Invoices\InvoiceDetails\Root.cs" />
     <Compile Include="JsonClasses\Stripe\CheckoutSession\CheckoutSession.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
+    <Compile Include="Models\DatosFacturacion.cs">
+      <DependentUpon>RedZ.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\DatosFiscales.cs">
+      <DependentUpon>RedZ.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Facturacion.cs">
+      <DependentUpon>RedZ.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\HttpHandler.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\Pagos.cs">
+      <DependentUpon>RedZ.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\PagosSinTimbrar.cs">
       <DependentUpon>RedZ.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\RedZ.Context.cs">
@@ -232,6 +245,7 @@
     <Content Include="Content\assets\css\bootstrap.min.css" />
     <Content Include="Content\assets\css\boxicons.min.css" />
     <Content Include="Content\assets\css\dark.css" />
+    <Content Include="Content\assets\css\datatables.css" />
     <Content Include="Content\assets\css\flaticon.css" />
     <Content Include="Content\assets\css\magnific-popup.min.css" />
     <Content Include="Content\assets\css\meanmenu.css" />
@@ -345,6 +359,7 @@
     <Content Include="Content\assets\img\white-logo.png" />
     <Content Include="Content\assets\js\bootstrap.bundle.min.js" />
     <Content Include="Content\assets\js\contact-form-script.js" />
+    <Content Include="Content\assets\js\datatables.js" />
     <Content Include="Content\assets\js\form-validator.min.js" />
     <Content Include="Content\assets\js\jquery.ajaxchimp.min.js" />
     <Content Include="Content\assets\js\jquery.appear.min.js" />
@@ -359,6 +374,7 @@
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\canceled.png" />
+    <Content Include="Content\favicon.svg" />
     <Content Include="Content\fonts\boxiconsd41d.svg" />
     <Content Include="Content\fonts\Flaticon.svg" />
     <Content Include="Content\img\404-error.png" />
@@ -484,6 +500,7 @@
     <Content Include="Content\services.svg" />
     <Content Include="Content\speedtest.svg" />
     <Content Include="Content\success.gif" />
+    <Content Include="Content\wifi_redz.png" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
@@ -527,6 +544,7 @@
       <DependentUpon>RedZ.edmx</DependentUpon>
     </Content>
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
+    <Content Include="Scripts\Cliente\Facturacion.js" />
     <Content Include="Scripts\Cliente\Pagos.js" />
     <Content Include="Scripts\Cliente\Vouchers.js" />
     <Content Include="Scripts\email-decode.min.js" />
@@ -573,6 +591,7 @@
     <Content Include="Views\Cliente\success.cshtml" />
     <Content Include="Views\Cliente\canceled.cshtml" />
     <Content Include="Views\Cliente\Vouchers.cshtml" />
+    <Content Include="Views\Facturacion\Facturacion.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Views\Session\" />

@@ -16,9 +16,17 @@ $(document).ready(function (e) {
             "bInfo": false,
             "searching": false,
             "responsive": true,
+            'processing': true,
+            'language': {
+                'loadingRecords': '&nbsp;',
+                'processing': '<i class="fa-solid fa-circle-notch fa-spin fa-spin-reverse"></i>'
+            },
             "order": [[0, "desc"]],
             "ordering": false,
             "aaData": data.reverse(),
+            "columnDefs": [
+                { "className": "dt-center", "targets": "_all" }
+            ],
             "columns": [
                 {
                     "data": null,

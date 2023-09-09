@@ -6,38 +6,39 @@
 
 
 
-<div class="col-10 container mt-5">
-    @*<div class="imgPagos" style="background-image: url('../../Content/payments.svg');"></div>*@
-    <img src="~/Content/payments.svg" class="imgPagos" style="color:white" />
-    <div class="">
-        <img src="~/Content/payments1.svg" class="imgPagos2" style="" />
-        <img src="~/Content/payments2.svg" class="imgPagos2" style="margin-left:20%;" />
-        <img src="~/Content/payments3.svg" class="imgPagos2" style="margin-left:50%;" />
-    </div>
+<section class="open-account-area ptb-100" id="section_form">
+    <div class="container">
+        <div class="section-title">
+            <h2>Pagos</h2>
+            <p>Historial de pagos de mensualidades del servicio de internet. </p>
+        </div>
+        <div class="open-account-form">
+            <div class="table-area pb-100">
+                <div class="container">
 
-    <div class="card" style="position:relative">
-        <div class="card-body">
-            <div class="table-responsive">
-                <div class="col-sm-12">
-                    <table class="table-hover" style="width: 100%; border-bottom:0px" id="tblPagos">
-                        <thead>
-                            <tr style="border-bottom: 0 !important; border-color:white">
-                                <th>Factura</th>
-                                <th>Tipo</th>
-                                <th>Concepto</th>
-                                <th>Periodo</th>
-                                <th>Cantidad a pagar</th>
-                                <th>Total</th>
-                                <th></th>
-                            </tr>
-                        </thead>
-                        <tbody class="list" style="font-size:13px;"></tbody>
-                    </table>
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-striped mt-2" style="width: 100%; border-bottom:0px" id="tblPagos">
+                            <thead>
+                                <tr style="border-bottom: 0 !important; border-color:white">
+                                    <th>Factura</th>
+                                    <th>Tipo</th>
+                                    <th>Concepto</th>
+                                    <th>Periodo</th>
+                                    <th>Cantidad a pagar</th>
+                                    <th>Total</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody class="list" style="font-size:13px;"></tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
+     
     </div>
-</div>
+</section>
+
 
 <div class="modal fade" id="pago-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
@@ -72,7 +73,7 @@
                                                 <input type="text" style="display:none;" id="clientId" name="clientId" />
                                                 <input type="text" style="display:none;" id="invoiceId" name="invoiceId" />
                                                 <input type="text" style="display:none;" id="id_precio" name="id_precio" />
-                                                <input class="font600 mb-1" id="lblconcepto" name="lblconcepto" style="border: 0; background-color: transparent;display:none;"  value="Pago del mes servicio Internet"/>
+                                                <input class="font600 mb-1" id="lblconcepto" name="lblconcepto" style="border: 0; background-color: transparent;display:none;" value="Pago del mes servicio Internet" />
                                                 @*<p class="font600 mb-1" id="lblconcepto"  name="lblconcepto"></p>*@
                                                 <div class="text-muted">Pago del mes servicio Internet</div>
                                             </td>

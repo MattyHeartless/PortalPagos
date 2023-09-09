@@ -12,16 +12,20 @@ $(document).ready(function () {
             $('#tblPagos').DataTable().clear().destroy();
         table_Pagos = $('#tblPagos').DataTable({
 
-            "bPaginate": false,
-            "bLengthChange": true,
+            "bPaginate": true,
+            "bLengthChange": false,
             "bFilter": false,
-            "pageLength": 150,
+            "pageLength": 10,
             "bInfo": false,
             "searching": false,
             "responsive": true,
             "order": [[0, "desc"]],
+            "processing":true,
             "ordering": false,
             "aaData": data.reverse(),
+            "columnDefs": [
+                { "className": "dt-center", "targets": "_all" }
+            ],
             "columns": [
                 { "data": "number" },
                 { "data": "type" },
@@ -69,6 +73,7 @@ $(document).ready(function () {
                 loadingRecords: "Cargando " + name + "...",
                 zeroRecords: "No hay registro",
                 emptyTable: "No hay " + name + " registrados",
+                processing: '<i class="fa-solid fa-circle-notch fa-spin fa-spin-reverse"></i>',
                 paginate: {
                     first: "Primero",
                     previous: "Anterior",

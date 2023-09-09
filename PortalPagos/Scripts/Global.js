@@ -32,7 +32,7 @@ function getPath() {
     }else if (origin == "http://192.168.100.38:61277") {
         $Patch = origin + "/";
     }
-    else if (origin == "http://10.248.210.95:61277") {
+    else if (origin == "http://172.20.10.2:61277") {
         $Patch = origin + "/";
     }else {
         $Patch = origin + "/REDZ";

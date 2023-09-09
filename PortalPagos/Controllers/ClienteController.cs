@@ -187,15 +187,17 @@ namespace PortalPagos.Controllers
                         var voucher = db.Pagos.Where(a => a.id_invoice == invoiceId).FirstOrDefault();
                         if(voucher == null)
                         {
+                            var ammount = await LoadInvoiceQty(invoiceId);
                             Pagos p = new Pagos();
                             p.id_cliente = clientId;
                             p.id_invoice = Convert.ToInt32(invoiceId);
+                            p.invoice = Session["invoice"].ToString();
                             p.monto = Convert.ToDecimal(item.Amount);
                             p.fecha_voucher = DateTime.Now;
                             p.tipo = "OXXO";
                             db.Pagos.Add(p);
                             db.SaveChanges();
-                            var ammount = await LoadInvoiceQty(invoiceId);
+                            
                             var httpWebRequest = (HttpWebRequest)WebRequest.Create("https://189.199.227.94/crm/api/v1.0/payments");
                             httpWebRequest.ContentType = "application/json";
                             httpWebRequest.Headers.Add("X-Auth-App-Key", "Qygxrlhlu9VvqOssEjJXW+M7MoCQcasxMC6X7wf/JFDJke1VOidFhRxJQ7GU44Bq");
@@ -241,6 +243,7 @@ namespace PortalPagos.Controllers
                 var resp = await http.doRequest();
                 PortalPagos.JsonClasses.Invoices.InvoiceDetails.Root invoice = new PortalPagos.JsonClasses.Invoices.InvoiceDetails.Root();
                 invoice = JsonConvert.DeserializeObject<PortalPagos.JsonClasses.Invoices.InvoiceDetails.Root>(resp);
+                Session["invoice"] = invoice.number;
                 return invoice.amountToPay; 
 
 
@@ -336,6 +339,7 @@ namespace PortalPagos.Controllers
                     p.id_cliente = Convert.ToInt32( Session["clientId"].ToString());
                     p.id_invoice = Convert.ToInt32(Session["invoiceId"].ToString());
                     p.monto = Convert.ToDecimal( Session["Total"].ToString());
+                    p.invoice = Session["invoice"].ToString();
                     p.fecha = DateTime.Now;
                     p.tipo = "Tarjeta";
                     db.Pagos.Add(p);
