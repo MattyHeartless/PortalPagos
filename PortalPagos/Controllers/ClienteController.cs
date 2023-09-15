@@ -191,7 +191,7 @@ namespace PortalPagos.Controllers
                             Pagos p = new Pagos();
                             p.id_cliente = clientId;
                             p.id_invoice = Convert.ToInt32(invoiceId);
-                            p.invoice = Session["invoice"].ToString();
+                            p.invoice = "00024";
                             p.monto = Convert.ToDecimal(item.Amount);
                             p.fecha_voucher = DateTime.Now;
                             p.tipo = "OXXO";
@@ -243,7 +243,8 @@ namespace PortalPagos.Controllers
                 var resp = await http.doRequest();
                 PortalPagos.JsonClasses.Invoices.InvoiceDetails.Root invoice = new PortalPagos.JsonClasses.Invoices.InvoiceDetails.Root();
                 invoice = JsonConvert.DeserializeObject<PortalPagos.JsonClasses.Invoices.InvoiceDetails.Root>(resp);
-                Session["invoice"] = invoice.number;
+                var number = invoice.number;
+                //Session["invoice"] = number;
                 return invoice.amountToPay; 
 
 

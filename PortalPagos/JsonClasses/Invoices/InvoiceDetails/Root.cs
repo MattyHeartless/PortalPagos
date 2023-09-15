@@ -12,7 +12,7 @@ namespace PortalPagos.JsonClasses.Invoices.InvoiceDetails
         public string number { get; set; }
         public DateTime? createdDate { get; set; }
         public DateTime? dueDate { get; set; }
-        public object emailSentDate { get; set; }
+        public DateTime? emailSentDate { get; set; }
         public int maturityDays { get; set; }
         public DateTime? taxableSupplyDate { get; set; }
         public object notes { get; set; }
@@ -62,5 +62,6 @@ namespace PortalPagos.JsonClasses.Invoices.InvoiceDetails
         public object generatedInvoiceId { get; set; }
         public object proformaInvoiceId { get; set; }
         public bool isAppliedVatReverseCharge { get; set; }
+
     }
 }

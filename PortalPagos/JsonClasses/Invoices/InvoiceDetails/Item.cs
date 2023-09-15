@@ -17,7 +17,7 @@ namespace PortalPagos.JsonClasses.Invoices.InvoiceDetails
         public object tax1Id { get; set; }
         public object tax2Id { get; set; }
         public object tax3Id { get; set; }
-        public object serviceId { get; set; }
+        public int serviceId { get; set; }
         public object serviceSurchargeId { get; set; }
         public object productId { get; set; }
         public object feeId { get; set; }

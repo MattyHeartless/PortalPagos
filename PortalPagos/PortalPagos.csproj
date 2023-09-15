@@ -543,6 +543,7 @@
     <Content Include="Models\RedZ.edmx.diagram">
       <DependentUpon>RedZ.edmx</DependentUpon>
     </Content>
+    <None Include="Properties\PublishProfiles\IISProfile.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\Cliente\Facturacion.js" />
     <Content Include="Scripts\Cliente\Pagos.js" />
